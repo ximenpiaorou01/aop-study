@@ -1,14 +1,12 @@
 package com.block.aopstudy.controller;
 
 import com.block.aopstudy.annotation.Auth;
-import com.block.aopstudy.enums.CommonEnum;
 import com.block.aopstudy.utils.ResultBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
 
 /**
  * @author wangrongsong
@@ -38,4 +36,16 @@ public class HelloController {
         return new String(res.getBytes("utf-8"));
     }
 
+    @GetMapping(value = "/testa")
+    public String testThreadLocal(){
+        DataApplicationContext.set("这是/testa设置的");
+        return ResultBody.success("设置成功").toString();
+    }
+
+
+    @GetMapping(value = "/testb")
+    public String testThreadLocal1(){
+        String data = DataApplicationContext.get();
+        return ResultBody.success(data).toString();
+    }
 }

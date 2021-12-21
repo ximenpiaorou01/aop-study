@@ -1,5 +1,6 @@
 package com.block.aopstudy.interceptor;
 
+import com.block.aopstudy.controller.DataApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,11 +30,12 @@ public class UrlHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String uri = request.getRequestURI();
+        log.debug("拦截器开始");
         if(uri.contains("/eat")){
-            log.info("被拦截器拦截了,拦截路径：{}",uri);
+            log.debug("被拦截器拦截了,拦截路径：{}",uri);
             return true;
         }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
+        return true;
     }
 
     /**
@@ -59,6 +61,13 @@ public class UrlHandlerInterceptor implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        log.debug("上下文准备销毁销毁了");
+        String before = DataApplicationContext.get();
+        log.debug("销毁前数据:"+before);
+        DataApplicationContext.remove();
+        log.debug("上下文已经毁销毁了");
+        String s = DataApplicationContext.get();
+        log.debug("从上下文获取到："+s);
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }
